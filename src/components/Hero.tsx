@@ -4,45 +4,43 @@ import { Icon } from "./Icons";
 
 export default function Hero() {
   return (
-    <section className="hero" id="top">
-      <div className="hero-copy">
-        <div className="availability">
-          <span className="availability-dot" />
-          Free on Android
-        </div>
-        <h1 className="hero-title" data-split>
-          Stop watching ads.
-          <br />
-          Start creating.
-        </h1>
-        <p className="hero-lede" data-hero-fade>
-          Extract audio, clean up vocals, and turn speech into text with one
-          focused toolkit that keeps your media on your phone.
-        </p>
-        <div className="hero-actions" data-hero-fade>
+    <section className="hero-cine" id="top">
+      <div className="availability" data-hero-slot="0">
+        <span className="availability-dot" />
+        Free on Android · No ads · No account
+      </div>
+
+      <h1 data-split data-hero-slot="1">
+        Stop watching ads. Start creating.
+      </h1>
+
+      <p className="hero-lede" data-hero-slot="2">
+        Extract audio, clean up vocals, and turn speech into text with one
+        focused toolkit that keeps your media on your phone.
+      </p>
+
+      <div className="hero-actions" data-hero-slot="2">
+        <span className="crescendo-btn" style={{ display: "inline-flex" }}>
           <StoreButton />
-          <a
-            className="text-link"
-            href={GITHUB_URL}
-            target="_blank"
-            rel="noreferrer"
-          >
-            <Icon name="github" size={21} />
-            Explore the source
-          </a>
-        </div>
-        <p className="hero-note" data-hero-fade>
-          No ads. No account. Android 10 and newer.
-        </p>
+        </span>
+        <a
+          className="text-link"
+          href={GITHUB_URL}
+          target="_blank"
+          rel="noreferrer"
+        >
+          <Icon name="github" size={21} />
+          Explore the source
+        </a>
       </div>
 
       <div
-        className="hero-visual"
+        className="hero-stage"
         aria-label="CreatorKit app preview"
-        data-parallax="-8"
+        data-hero-slot="3"
       >
-        <div className="visual-glow" />
-        <div className="phone phone--back" aria-hidden="true" data-parallax="-14">
+        <div className="hero-stage-glow" aria-hidden="true" />
+        <div className="phone phone--ghost" aria-hidden="true">
           <img
             src="/assets/screenshot-transcriber.png"
             alt=""
@@ -50,7 +48,7 @@ export default function Hero() {
             height="2400"
           />
         </div>
-        <div className="phone phone--front tilt" data-tilt data-float>
+        <div className="phone phone--lead tilt" data-tilt data-float>
           <img
             src="/assets/screenshot-extractor.png"
             alt="CreatorKit Audio Extractor interface"
@@ -58,17 +56,21 @@ export default function Hero() {
             height="2285"
           />
         </div>
-        <div className="app-icon-orbit" aria-hidden="true" data-float-delayed>
-          <img src="/assets/creator-kit-icon.png" alt="" />
-        </div>
-        <div className="floating-note floating-note--top" data-float>
-          <Icon name="wave" size={19} />
+        <div className="hero-badges hero-badges--a" data-float>
+          <Icon name="wave" size={17} />
           Vocal clarity
         </div>
-        <div className="floating-note floating-note--bottom" data-float-delayed>
-          <Icon name="shield" size={19} />
+        <div className="hero-badges hero-badges--b" data-float-delayed>
+          <Icon name="shield" size={17} />
           Files stay local
         </div>
+      </div>
+
+      <div className="scroll-cue" aria-hidden="true" data-hero-slot="4">
+        <span>SCROLL</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+          <path d="m6 9 6 6 6-6" />
+        </svg>
       </div>
     </section>
   );

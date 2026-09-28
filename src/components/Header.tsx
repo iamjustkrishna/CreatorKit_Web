@@ -3,9 +3,11 @@ import { GITHUB_URL } from "./StoreButton";
 import StoreButton from "./StoreButton";
 import { Icon } from "./Icons";
 import SoundPill from "./SoundPill";
+import { useSound } from "../audio/SoundContext";
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { enabled } = useSound();
   const closeMenu = () => setMenuOpen(false);
 
   useEffect(() => {
@@ -13,7 +15,7 @@ export default function Header() {
       const intensity = Math.min(1, window.scrollY / 400);
       document.documentElement.style.setProperty(
         "--header-blur",
-        `${12 + intensity * 8}px`,
+        `${12 + intensity * 10}px`,
       );
       document.body.classList.toggle("is-scrolled", window.scrollY > 24);
     };
@@ -23,11 +25,16 @@ export default function Header() {
   }, []);
 
   return (
-    <header className="site-header">
-      <a className="brand" href="#top" onClick={closeMenu}>
+    <header className="console-header">
+      <a className="console-brand" href="#top" onClick={closeMenu}>
         <img src="/assets/creator-kit-icon.png" alt="" />
         <span>CreatorKit</span>
       </a>
+
+      <span className={`onair${enabled ? " live" : ""}`} aria-hidden="true">
+        <i />
+        {enabled ? "ON AIR" : "MUTED"}
+      </span>
 
       <button
         className="menu-button"
@@ -42,7 +49,7 @@ export default function Header() {
 
       <nav
         id="site-navigation"
-        className={`site-nav${menuOpen ? " site-nav--open" : ""}`}
+        className={`site-nav console-nav${menuOpen ? " site-nav--open" : ""}`}
         aria-label="Main navigation"
       >
         <a href="#workflow" onClick={closeMenu}>
@@ -57,8 +64,10 @@ export default function Header() {
         <a href={GITHUB_URL} target="_blank" rel="noreferrer" onClick={closeMenu}>
           GitHub
         </a>
-        <SoundPill />
-        <StoreButton compact />
+        <span className="console-actions">
+          <SoundPill />
+          <StoreButton compact />
+        </span>
       </nav>
     </header>
   );

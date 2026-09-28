@@ -9,45 +9,30 @@ const workflow: { icon: IconName; title: string; text: string }[] = [
 
 export default function Workflow() {
   return (
-    <section className="workflow section-frame" id="workflow">
-      <div className="section-heading" data-reveal>
-        <p className="section-kicker">A shorter path from clip to creation</p>
-        <h2>Everything your audio needs, in one flow.</h2>
+    <section className="signal-journey" id="workflow">
+      <div data-reveal>
+        <p className="module-label">01 / SIGNAL PATH</p>
+        <h2 className="module-title">Everything your audio needs, in one flow.</h2>
       </div>
 
-      <div className="signal-path" data-workflow>
-        <div className="signal-line" aria-hidden="true">
-          <svg
-            className="signal-svg"
-            viewBox="0 0 1000 8"
-            preserveAspectRatio="none"
-            aria-hidden="true"
-          >
-            <line
-              x1="0"
-              y1="4"
-              x2="1000"
-              y2="4"
-              className="signal-track"
-              strokeWidth="2"
+      <div className="journey-grid" data-journey>
+        <div className="journey-spine" aria-hidden="true">
+          <div className="journey-progress" data-journey-progress />
+          {workflow.map((step, i) => (
+            <span
+              key={step.title}
+              className="beat-node"
+              data-beat-node={i}
+              style={{ left: `${12.5 + i * 25}%` }}
             />
-            <line
-              x1="0"
-              y1="4"
-              x2="1000"
-              y2="4"
-              className="signal-draw"
-              strokeWidth="3"
-            />
-          </svg>
-          <span />
+          ))}
         </div>
         {workflow.map((step, index) => (
-          <article className="signal-step" key={step.title} data-reveal>
-            <div className="signal-node" data-tilt-card>
-              <Icon name={step.icon} size={27} />
-              <span>{String(index + 1).padStart(2, "0")}</span>
+          <article className="module-card" key={step.title} data-journey-card>
+            <div className="module-icon">
+              <Icon name={step.icon} size={24} />
             </div>
+            <div className="module-num">{String(index + 1).padStart(2, "0")}</div>
             <h3>{step.title}</h3>
             <p>{step.text}</p>
           </article>

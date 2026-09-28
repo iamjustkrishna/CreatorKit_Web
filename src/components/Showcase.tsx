@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Icon, type IconName } from "./Icons";
 
 type ShowcaseTool = {
@@ -53,62 +53,77 @@ const showcaseTools: ShowcaseTool[] = [
 ];
 
 export default function Showcase() {
-  const [activeToolId, setActiveToolId] =
-    useState<ShowcaseTool["id"]>("extract");
-  const activeTool =
-    showcaseTools.find((tool) => tool.id === activeToolId) ?? showcaseTools[0];
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [direction, setDirection] = useState<1 | -1>(1);
+  const [leaving, setLeaving] = useState<ShowcaseTool | null>(null);
+  const timer = useRef(0);
+  const activeTool = showcaseTools[activeIndex];
+
+  const select = (next: number) => {
+    if (next === activeIndex) return;
+    setDirection(next > activeIndex ? 1 : -1);
+    setLeaving(showcaseTools[activeIndex]);
+    window.clearTimeout(timer.current);
+    timer.current = window.setTimeout(() => setLeaving(null), 250);
+    setActiveIndex(next);
+  };
+
+  const inClass = direction === 1 ? "slide-in-right" : "slide-in-left";
+  const outClass = direction === 1 ? "slide-out-left" : "slide-out-right";
 
   return (
-    <section className="showcase section-frame" id="showcase">
-      <div
-        className="showcase-stage"
-        data-tool={activeTool.id}
-        data-reveal
-      >
-        <div className="showcase-screen tilt" data-tilt>
-          <div className="showcase-screen-bar" aria-hidden="true">
-            <span />
-            <span />
-            <span />
-          </div>
+    <section className="showcase-cine" id="showcase">
+      <div className="stage-frame" data-reveal data-tool={activeTool.id}>
+        <div className="stage-screen tilt" data-tilt>
+          {leaving && (
+            <img
+              src={leaving.image}
+              alt=""
+              aria-hidden="true"
+              width="1080"
+              height={leaving.imageHeight}
+              className={outClass}
+            />
+          )}
           <img
             key={activeTool.id}
             src={activeTool.image}
             alt={activeTool.alt}
             width="1080"
             height={activeTool.imageHeight}
+            className={inClass}
           />
         </div>
         <div className="screen-aura" aria-hidden="true" />
       </div>
 
-      <div className="showcase-content" data-reveal>
-        <p className="section-kicker">A closer look</p>
-        <h2>Your work stays uncomplicated.</h2>
+      <div data-reveal>
+        <p className="module-label">02 / INSIDE THE APP</p>
+        <h2 className="module-title">Your work stays uncomplicated.</h2>
         <div
-          className="tool-tabs"
+          className="console-tabs"
           role="tablist"
           aria-label="CreatorKit feature previews"
         >
-          {showcaseTools.map((tool) => (
+          {showcaseTools.map((tool, i) => (
             <button
               key={tool.id}
               id={`tab-${tool.id}`}
               type="button"
               role="tab"
-              aria-selected={activeTool.id === tool.id}
+              aria-selected={i === activeIndex}
               aria-controls="tool-panel"
-              className={activeTool.id === tool.id ? "is-active" : ""}
-              onClick={() => setActiveToolId(tool.id)}
+              className={i === activeIndex ? "is-active" : ""}
+              onClick={() => select(i)}
             >
-              <Icon name={tool.icon} size={19} />
+              <Icon name={tool.icon} size={18} />
               {tool.shortLabel}
             </button>
           ))}
         </div>
 
         <div
-          className="tool-panel"
+          className="tool-detail"
           id="tool-panel"
           role="tabpanel"
           aria-labelledby={`tab-${activeTool.id}`}

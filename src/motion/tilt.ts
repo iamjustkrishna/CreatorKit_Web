@@ -11,7 +11,7 @@ export function initTilt(root: ParentNode = document): () => void {
   );
 
   for (const el of targets) {
-    const max = el.hasAttribute("data-tilt-card") ? 6 : 8;
+    const max = el.hasAttribute("data-tilt-card") ? 6 : 10;
     let raf = 0;
     let tx = 0;
     let ty = 0;
@@ -19,8 +19,9 @@ export function initTilt(root: ParentNode = document): () => void {
     let cy = 0;
 
     const render = () => {
-      cx += (tx - cx) * 0.12;
-      cy += (ty - cy) * 0.12;
+      // Snappy follow (stiffness-like); release settles without float.
+      cx += (tx - cx) * 0.2;
+      cy += (ty - cy) * 0.2;
       el.style.transform = `perspective(900px) rotateX(${cy.toFixed(2)}deg) rotateY(${cx.toFixed(2)}deg)`;
       if (Math.abs(tx - cx) > 0.01 || Math.abs(ty - cy) > 0.01) {
         raf = requestAnimationFrame(render);

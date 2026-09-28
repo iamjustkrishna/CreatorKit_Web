@@ -1,6 +1,7 @@
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
+import { DUR, STAGGER, staggerDelay } from "./tokens";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -28,80 +29,106 @@ export function initReveals(): () => void {
   if (reduced) return () => undefined;
 
   const ctx = gsap.context(() => {
-    // Generic reveals
+    // Generic reveals — enter curve, duration by element weight.
+    // Calm sections (privacy): slower, smaller travel, no overshoot anywhere here.
     gsap.utils.toArray<HTMLElement>("[data-reveal]").forEach((el) => {
-      // Skip hero (already animated on mount)
-      if (el.closest(".hero")) return;
+      const calm = el.hasAttribute("data-calm");
       gsap.fromTo(
         el,
-        { y: 24, opacity: 0 },
+        { y: calm ? 16 : 28, opacity: 0 },
         {
           y: 0,
           opacity: 1,
-          duration: 0.7,
-          ease: "power3.out",
+          duration: (calm ? 600 : DUR.section) / 1000,
+          ease: "expo.out", // closest GSAP match to cubic-bezier(0.16,1,0.3,1)
           scrollTrigger: { trigger: el, start: "top 85%", once: true },
         },
       );
     });
 
-    // Declaration word scrub
-    document.querySelectorAll<HTMLElement>("[data-scrub-words]").forEach((p) => {
-      const words = p.textContent?.split(/\s+/) ?? [];
-      p.innerHTML = words
-        .map((w) => `<span class="scrub-word">${w}</span>`)
-        .join(" ");
-      const spans = p.querySelectorAll(".scrub-word");
-      gsap.to(spans, {
-        opacity: 1,
-        stagger: 0.06,
-        ease: "none",
-        scrollTrigger: {
-          trigger: p,
-          start: "top 80%",
-          end: "bottom 45%",
-          scrub: 0.6,
-        },
-      });
-    });
-
-    // Workflow signal draw
-    const path = document.querySelector<HTMLElement>("[data-workflow]");
-    if (path) {
-      const draw = path.querySelector(".signal-draw");
-      if (draw) {
+    // Journey cards: 300ms UI duration, 60ms list stagger, enter curve.
+    // Scrub drives the spine; cards pop once as the line reaches them.
+    const journey = document.querySelector<HTMLElement>("[data-journey]");
+    if (journey) {
+      const progress = journey.querySelector("[data-journey-progress]");
+      if (progress) {
         gsap.fromTo(
-          draw,
-          { strokeDasharray: 1000, strokeDashoffset: 1000 },
+          progress,
+          { scaleX: 0 },
           {
-            strokeDashoffset: 0,
+            scaleX: 1,
             ease: "none",
             scrollTrigger: {
-              trigger: path,
-              start: "top 80%",
-              end: "bottom 50%",
+              trigger: journey,
+              start: "top 75%",
+              end: "bottom 55%",
               scrub: 0.8,
             },
           },
         );
       }
-      // Tilt owns transform on these cards, so animate opacity only here.
-      gsap.utils.toArray<HTMLElement>("[data-tilt-card]").forEach((card, i) => {
+      const cards = journey.querySelectorAll<HTMLElement>("[data-journey-card]");
+      cards.forEach((card, i) => {
         gsap.fromTo(
           card,
-          { opacity: 0 },
+          { y: 32, opacity: 0 },
           {
+            y: 0,
             opacity: 1,
-            duration: 0.5,
-            delay: (i % 4) * 0.08,
-            ease: "power2.out",
+            duration: DUR.ui / 1000,
+            delay: staggerDelay(i, STAGGER.list) / 1000,
+            ease: "expo.out",
             scrollTrigger: { trigger: card, start: "top 88%", once: true },
           },
         );
       });
+      // Beat nodes light as the progress line passes each quartile.
+      const nodes = journey.querySelectorAll<HTMLElement>("[data-beat-node]");
+      nodes.forEach((node, i) => {
+        ScrollTrigger.create({
+          trigger: journey,
+          start: "top 75%",
+          end: "bottom 55%",
+          scrub: 0.8,
+          onUpdate: (self) => {
+            node.classList.toggle("lit", self.progress >= (i + 1) / (nodes.length + 1));
+          },
+        });
+      });
     }
 
-    // Parallax
+    // Crescendo: branded pop with overshoot — the one place weight is playful.
+    document.querySelectorAll<HTMLElement>("[data-crescendo]").forEach((el) => {
+      gsap.fromTo(
+        el,
+        { scale: 0.92, opacity: 0 },
+        {
+          scale: 1,
+          opacity: 1,
+          duration: 0.5,
+          ease: "back.out(1.56)",
+          scrollTrigger: { trigger: el, start: "top 85%", once: true },
+        },
+      );
+    });
+
+    // Shield: calm settle, no rotation theatrics.
+    const shield = document.querySelector("[data-shield]");
+    if (shield) {
+      gsap.fromTo(
+        shield,
+        { scale: 0.9, opacity: 0 },
+        {
+          scale: 1,
+          opacity: 1,
+          duration: 0.6,
+          ease: "expo.out",
+          scrollTrigger: { trigger: shield, start: "top 85%", once: true },
+        },
+      );
+    }
+
+    // Parallax on scroll (move = stays on screen; scrubbed so linear-in-time is right).
     gsap.utils.toArray<HTMLElement>("[data-parallax]").forEach((el) => {
       const speed = Number(el.dataset.parallax ?? "-8");
       gsap.to(el, {
@@ -116,30 +143,9 @@ export function initReveals(): () => void {
       });
     });
 
-    // Shield draw + icon spin
-    const shield = document.querySelector("[data-shield] svg");
-    if (shield) {
-      gsap.fromTo(
-        shield,
-        { scale: 0.8, rotate: -8, opacity: 0 },
-        {
-          scale: 1,
-          rotate: 0,
-          opacity: 1,
-          duration: 0.8,
-          ease: "back.out(1.7)",
-          scrollTrigger: { trigger: shield, start: "top 85%", once: true },
-        },
-      );
-    }
     const spin = document.querySelector("[data-icon-spin]");
     if (spin) {
-      gsap.to(spin, {
-        rotateY: 360,
-        duration: 14,
-        repeat: -1,
-        ease: "none",
-      });
+      gsap.to(spin, { rotateY: 360, duration: 14, repeat: -1, ease: "none" });
     }
   });
 
