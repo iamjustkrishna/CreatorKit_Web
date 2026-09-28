@@ -124,6 +124,49 @@
   opacity: 0.15;
 }
 
+/* Workflow signal SVG */
+.signal-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 8px;
+  overflow: visible;
+}
+
+.signal-track {
+  stroke: rgba(229, 213, 255, 0.16);
+}
+
+.signal-draw {
+  stroke: var(--violet);
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 6px var(--violet));
+}
+
+.signal-path {
+  position: relative;
+}
+
+/* Showcase transitions */
+.showcase-screen img {
+  view-transition-name: showcase-screen;
+}
+
+::view-transition-old(showcase-screen),
+::view-transition-new(showcase-screen) {
+  animation-duration: 360ms;
+  animation-timing-function: cubic-bezier(0.21, 0.8, 0.38, 1);
+}
+
+/* Lenis */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
 /* Showcase aura hues */
 .showcase-stage[data-tool="extract"] .screen-aura {
   background: radial-gradient(circle, rgba(168, 85, 247, 0.5), transparent 70%);

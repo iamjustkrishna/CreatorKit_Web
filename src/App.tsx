@@ -13,11 +13,26 @@ const SceneCanvas = lazy(() => import("./scene/SceneCanvas"));
 
 function App() {
   useEffect(() => {
-    let cleanup: (() => void) | undefined;
+    let cleanups: (() => void)[] = [];
+    let cancelled = false;
     import("./motion/hero").then((m) => {
-      cleanup = m.initHeroMotion();
+      if (!cancelled) cleanups.push(m.initHeroMotion());
     });
-    return () => cleanup?.();
+    import("./motion/reveal").then((m) => {
+      if (cancelled) return;
+      cleanups.push(m.initLenis());
+      cleanups.push(m.initReveals());
+    });
+    return () => {
+      cancelled = true;
+      cleanups.forEach((fn) => {
+        try {
+          fn();
+        } catch {
+          /* ignore teardown errors */
+        }
+      });
+    };
   }, []);
 
   return (
