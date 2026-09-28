@@ -13,7 +13,7 @@ const SceneCanvas = lazy(() => import("./scene/SceneCanvas"));
 
 function App() {
   useEffect(() => {
-    let cleanups: (() => void)[] = [];
+    const cleanups: (() => void)[] = [];
     let cancelled = false;
     import("./motion/hero").then((m) => {
       if (!cancelled) cleanups.push(m.initHeroMotion());
@@ -22,6 +22,9 @@ function App() {
       if (cancelled) return;
       cleanups.push(m.initLenis());
       cleanups.push(m.initReveals());
+    });
+    import("./motion/wave").then((m) => {
+      if (!cancelled) cleanups.push(m.initWave());
     });
     return () => {
       cancelled = true;
