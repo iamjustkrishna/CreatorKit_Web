@@ -1,4 +1,4 @@
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useEffect } from "react";
 import Header from "./components/Header";
 import Hero from "./components/Hero";
 import Declaration from "./components/Declaration";
@@ -12,6 +12,14 @@ import SoundPill from "./components/SoundPill";
 const SceneCanvas = lazy(() => import("./scene/SceneCanvas"));
 
 function App() {
+  useEffect(() => {
+    let cleanup: (() => void) | undefined;
+    import("./motion/hero").then((m) => {
+      cleanup = m.initHeroMotion();
+    });
+    return () => cleanup?.();
+  }, []);
+
   return (
     <div className="site-shell">
       <a className="skip-link" href="#main">
