@@ -37,9 +37,8 @@ export default function Hero() {
       </div>
 
       <div
-        className="hero-visual tilt"
+        className="hero-visual"
         aria-label="CreatorKit app preview"
-        data-tilt
         data-parallax="-8"
       >
         <div className="visual-glow" />
@@ -51,7 +50,7 @@ export default function Hero() {
             height="2400"
           />
         </div>
-        <div className="phone phone--front" data-float>
+        <div className="phone phone--front tilt" data-tilt data-float>
           <img
             src="/assets/screenshot-extractor.png"
             alt="CreatorKit Audio Extractor interface"

@@ -129,16 +129,6 @@ export default function SceneCanvas() {
         dpr={dpr}
         camera={{ position: [0, 0, 6], fov: 55 }}
         gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
-        onCreated={({ gl }) => {
-          const pause = () => {
-            try {
-              if (document.hidden) gl.setAnimationLoop(null);
-            } catch {
-              /* ignore */
-            }
-          };
-          document.addEventListener("visibilitychange", pause, { once: true });
-        }}
       >
         <ambientLight intensity={0.7} />
         <pointLight position={[4, 3, 4]} intensity={12} color="#a855f7" />

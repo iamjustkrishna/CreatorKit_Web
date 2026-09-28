@@ -85,16 +85,16 @@ export function initReveals(): () => void {
           },
         );
       }
+      // Tilt owns transform on these cards, so animate opacity only here.
       gsap.utils.toArray<HTMLElement>("[data-tilt-card]").forEach((card, i) => {
         gsap.fromTo(
           card,
-          { scale: 0.9, opacity: 0 },
+          { opacity: 0 },
           {
-            scale: 1,
             opacity: 1,
             duration: 0.5,
             delay: (i % 4) * 0.08,
-            ease: "back.out(1.6)",
+            ease: "power2.out",
             scrollTrigger: { trigger: card, start: "top 88%", once: true },
           },
         );

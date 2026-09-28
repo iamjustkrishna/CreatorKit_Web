@@ -61,12 +61,11 @@ export default function Showcase() {
   return (
     <section className="showcase section-frame" id="showcase">
       <div
-        className="showcase-stage tilt"
+        className="showcase-stage"
         data-tool={activeTool.id}
-        data-tilt
         data-reveal
       >
-        <div className="showcase-screen">
+        <div className="showcase-screen tilt" data-tilt>
           <div className="showcase-screen-bar" aria-hidden="true">
             <span />
             <span />

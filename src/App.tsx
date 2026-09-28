@@ -1,4 +1,5 @@
 import { Suspense, lazy, useEffect } from "react";
+import ErrorBoundary from "./components/ErrorBoundary";
 import Header from "./components/Header";
 import Hero from "./components/Hero";
 import Declaration from "./components/Declaration";
@@ -15,17 +16,23 @@ function App() {
   useEffect(() => {
     const cleanups: (() => void)[] = [];
     let cancelled = false;
-    import("./motion/hero").then((m) => {
-      if (!cancelled) cleanups.push(m.initHeroMotion());
-    });
-    import("./motion/reveal").then((m) => {
-      if (cancelled) return;
-      cleanups.push(m.initLenis());
-      cleanups.push(m.initReveals());
-    });
-    import("./motion/wave").then((m) => {
-      if (!cancelled) cleanups.push(m.initWave());
-    });
+    import("./motion/hero")
+      .then((m) => {
+        if (!cancelled) cleanups.push(m.initHeroMotion());
+      })
+      .catch((err) => console.warn("[motion] hero chunk failed:", err));
+    import("./motion/reveal")
+      .then((m) => {
+        if (cancelled) return;
+        cleanups.push(m.initLenis());
+        cleanups.push(m.initReveals());
+      })
+      .catch((err) => console.warn("[motion] reveal chunk failed:", err));
+    import("./motion/wave")
+      .then((m) => {
+        if (!cancelled) cleanups.push(m.initWave());
+      })
+      .catch((err) => console.warn("[motion] wave chunk failed:", err));
     return () => {
       cancelled = true;
       cleanups.forEach((fn) => {
@@ -44,9 +51,11 @@ function App() {
         Skip to content
       </a>
 
-      <Suspense fallback={null}>
-        <SceneCanvas />
-      </Suspense>
+      <ErrorBoundary>
+        <Suspense fallback={null}>
+          <SceneCanvas />
+        </Suspense>
+      </ErrorBoundary>
       <Header />
 
       <main id="main">
