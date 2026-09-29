@@ -1,0 +1,287 @@
+/* =====================================================================
+   HUD — quiet studio-console furniture
+   ===================================================================== */
+.progress-line {
+  position: fixed;
+  z-index: 120;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 2px;
+  pointer-events: none;
+}
+
+.progress-line > div {
+  height: 100%;
+  background: linear-gradient(90deg, var(--cyan), var(--violet), var(--orange));
+  box-shadow: 0 0 12px var(--violet);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.hud {
+  position: fixed;
+  z-index: 60;
+  top: 50%;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  color: var(--dim);
+  font: 500 0.54rem/1 var(--font-mono);
+  letter-spacing: 0.2em;
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+
+@media (min-width: 1360px) {
+  .hud {
+    display: flex;
+  }
+}
+
+.hud--right {
+  right: 22px;
+  align-items: flex-end;
+}
+
+.hud-chapter {
+  writing-mode: vertical-rl;
+  color: var(--cyan);
+}
+
+.hud-dots {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  gap: 8px;
+  flex-direction: column;
+  list-style: none;
+}
+
+.hud-dots li {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--line-strong);
+  transition:
+    background 300ms var(--ease-enter),
+    box-shadow 300ms var(--ease-enter),
+    transform 300ms var(--ease-enter);
+}
+
+.hud-dots li.is-active {
+  background: var(--cyan);
+  box-shadow: 0 0 10px var(--cyan);
+  transform: scale(1.6);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Pure decoration; skip it entirely. */
+  .hud {
+    display: none !important;
+  }
+}
+
+/* =====================================================================
+   Cursor
+   ===================================================================== */
+.cursor {
+  position: fixed;
+  z-index: 300;
+  inset: 0;
+  pointer-events: none;
+}
+
+.cursor-ring,
+.cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  opacity: 0;
+}
+
+.cursor-ring {
+  width: 38px;
+  height: 38px;
+  margin: -19px 0 0 -19px;
+  border: 1px solid rgba(34, 211, 238, 0.55);
+  transition:
+    width 300ms var(--ease-enter),
+    height 300ms var(--ease-enter),
+    margin 300ms var(--ease-enter),
+    background 300ms var(--ease-enter),
+    border-color 300ms var(--ease-enter),
+    opacity 300ms var(--ease-enter);
+}
+
+.cursor-dot {
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  background: var(--cyan);
+  box-shadow: 0 0 12px var(--cyan);
+}
+
+.cursor-on .cursor-ring,
+.cursor-on .cursor-dot {
+  opacity: 1;
+}
+
+.cursor-ring.is-hover {
+  width: 68px;
+  height: 68px;
+  margin: -34px 0 0 -34px;
+  border-color: var(--cyan);
+  background: rgba(34, 211, 238, 0.08);
+}
+
+.cursor-ring.is-down {
+  width: 26px;
+  height: 26px;
+  margin: -13px 0 0 -13px;
+}
+
+@media (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .cursor {
+    display: none;
+  }
+}
+
+/* =====================================================================
+   Loader — two halves that part once the scene is ready
+   ===================================================================== */
+.intro {
+  position: fixed;
+  z-index: 500;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+
+.intro-half {
+  position: absolute;
+  right: 0;
+  left: 0;
+  height: 50.4%;
+  /* Each half shows half of one shared backdrop, so the seam is invisible. */
+  background:
+    radial-gradient(55% 60% at 50% 50%, rgba(168, 85, 247, 0.2), transparent 72%),
+    radial-gradient(40% 40% at 70% 70%, rgba(34, 211, 238, 0.09), transparent 72%),
+    var(--night);
+  background-size: 100% 198%;
+  will-change: transform;
+}
+
+.intro-half--top {
+  top: 0;
+  background-position: 50% 0%;
+}
+
+.intro-half--bottom {
+  bottom: 0;
+  background-position: 50% 100%;
+}
+
+.intro-seam {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  right: 0;
+  left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--cyan), var(--violet), transparent);
+  box-shadow: 0 0 28px var(--cyan);
+  opacity: 0;
+  transform: scaleX(0);
+}
+
+.intro-content {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  width: min(560px, calc(100% - 40px));
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  text-align: center;
+}
+
+.intro-mark {
+  position: relative;
+  width: 84px;
+  height: 84px;
+  margin-bottom: 14px;
+}
+
+.intro-mark img {
+  position: relative;
+  z-index: 1;
+  width: 84px;
+  height: 84px;
+  border-radius: 24px;
+  box-shadow: 0 0 60px rgba(168, 85, 247, 0.5);
+}
+
+.intro-rings i {
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(168, 85, 247, 0.55);
+  border-radius: 30px;
+  animation: intro-ring 2.6s var(--ease-enter) infinite;
+}
+
+.intro-rings i:nth-child(2) {
+  animation-delay: 0.6s;
+}
+.intro-rings i:nth-child(3) {
+  animation-delay: 1.2s;
+}
+
+@keyframes intro-ring {
+  from {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(2.1);
+  }
+}
+
+.intro-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 7vw, 3.6rem);
+  line-height: 1;
+  letter-spacing: -0.035em;
+}
+
+.intro-meter {
+  display: flex;
+  width: min(320px, 80%);
+  margin: 10px 0 6px;
+  gap: 14px;
+  align-items: center;
+  color: var(--dim);
+  font: 500 0.58rem/1 var(--font-mono);
+  letter-spacing: 0.2em;
+}
+
+.intro-meter-fill {
+  height: 2px;
+  flex: 1;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--cyan), var(--violet));
+  box-shadow: 0 0 10px var(--violet);
+  transform-origin: left;
+  transition: transform 260ms var(--ease-enter);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intro-rings i {
+    animation: none;
+    opacity: 0.4;
+  }
+}

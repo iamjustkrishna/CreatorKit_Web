@@ -1,22 +1,20 @@
 import { useEffect, useState } from "react";
-import { GITHUB_URL } from "./StoreButton";
-import StoreButton from "./StoreButton";
+import { scroll } from "../core/scroll";
 import { Icon } from "./Icons";
-import SoundPill from "./SoundPill";
-import { useSound } from "../audio/SoundContext";
+import StoreButton, { GITHUB_URL } from "./StoreButton";
+
+const LINKS = [
+  { href: "#workflow", label: "What it does" },
+  { href: "#showcase", label: "Inside the app" },
+  { href: "#privacy", label: "Privacy" },
+];
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const { enabled } = useSound();
   const closeMenu = () => setMenuOpen(false);
 
   useEffect(() => {
     const onScroll = () => {
-      const intensity = Math.min(1, window.scrollY / 400);
-      document.documentElement.style.setProperty(
-        "--header-blur",
-        `${12 + intensity * 10}px`,
-      );
       document.body.classList.toggle("is-scrolled", window.scrollY > 24);
     };
     onScroll();
@@ -24,17 +22,27 @@ export default function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // While the mobile sheet is open, freeze page scroll.
+  useEffect(() => {
+    if (menuOpen) scroll.lenis?.stop();
+    else scroll.lenis?.start();
+    document.documentElement.classList.toggle("menu-open", menuOpen);
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMenuOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.documentElement.classList.remove("menu-open");
+    };
+  }, [menuOpen]);
+
   return (
-    <header className="console-header">
-      <a className="console-brand" href="#top" onClick={closeMenu}>
-        <img src="/assets/creator-kit-icon.png" alt="" />
+    <header className="header" data-header>
+      <a className="brand" href="#top" onClick={closeMenu}>
+        <img src="/assets/creator-kit-icon.png" alt="" width="32" height="32" />
         <span>CreatorKit</span>
       </a>
-
-      <span className={`onair${enabled ? " live" : ""}`} aria-hidden="true">
-        <i />
-        {enabled ? "ON AIR" : "MUTED"}
-      </span>
 
       <button
         className="menu-button"
@@ -49,23 +57,18 @@ export default function Header() {
 
       <nav
         id="site-navigation"
-        className={`site-nav console-nav${menuOpen ? " site-nav--open" : ""}`}
+        className={`nav${menuOpen ? " is-open" : ""}`}
         aria-label="Main navigation"
       >
-        <a href="#workflow" onClick={closeMenu}>
-          What it does
-        </a>
-        <a href="#showcase" onClick={closeMenu}>
-          Inside the app
-        </a>
-        <a href="#privacy" onClick={closeMenu}>
-          Privacy
-        </a>
+        {LINKS.map((link) => (
+          <a key={link.href} href={link.href} onClick={closeMenu}>
+            {link.label}
+          </a>
+        ))}
         <a href={GITHUB_URL} target="_blank" rel="noreferrer" onClick={closeMenu}>
           GitHub
         </a>
-        <span className="console-actions">
-          <SoundPill />
+        <span className="nav-actions">
           <StoreButton compact />
         </span>
       </nav>

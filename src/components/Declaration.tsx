@@ -1,15 +1,21 @@
 export default function Declaration() {
   return (
-    <section className="declaration" aria-label="CreatorKit mission" data-reveal>
-      <p data-scrub-words>
+    <section className="story" id="story" data-chapter="story" aria-label="CreatorKit mission">
+      <p className="story-text" data-scrub-words>
         One pocket studio, built for the moment between an idea and a finished
         file.
       </p>
-      <div className="declaration-facts">
-        <span>Ad-free</span>
-        <span>Open source</span>
-        <span>Made for Android</span>
-      </div>
+      <ul className="story-facts" data-reveal>
+        <li>
+          <b>01</b>Ad-free
+        </li>
+        <li>
+          <b>02</b>Open source
+        </li>
+        <li>
+          <b>03</b>Made for Android
+        </li>
+      </ul>
     </section>
   );
 }

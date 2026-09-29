@@ -1,152 +1,164 @@
-import { Suspense, useEffect, useMemo, useRef } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { Float, Stars } from "@react-three/drei";
+import { Suspense, useEffect, useState } from "react";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { Environment, Lightformer, PerformanceMonitor } from "@react-three/drei";
+import gsap from "gsap";
 import * as THREE from "three";
-import { auroraFragment, auroraVertex } from "./shaders";
+import { isTouch } from "../core/scroll";
+import { frame, initPointer, updateFrame } from "./frame";
+import { detectTier, type TierConfig } from "./quality";
+import Nebula from "./Nebula";
+import Phone from "./Phone";
+import Signal from "./Signal";
+import Terrain from "./Terrain";
 
-function webglAvailable(): boolean {
-  try {
-    const c = document.createElement("canvas");
-    return !!(
-      window.WebGLRenderingContext &&
-      (c.getContext("webgl2") || c.getContext("webgl"))
-    );
-  } catch {
-    return false;
-  }
+const BASE_FOV = 42;
+const MAX_PIXELS = 2.6e6;
+
+/** Largest pixel ratio that keeps the drawing buffer under the pixel budget. */
+function pixelBudget(cfg: TierConfig): number {
+  const cssPixels = Math.max(1, window.innerWidth * window.innerHeight);
+  const fit = Math.sqrt(MAX_PIXELS / cssPixels);
+  return Math.min(cfg.dpr[1], Math.max(0.6, fit));
 }
 
-function ScrollRig({ children }: { children: React.ReactNode }) {
-  const group = useRef<THREE.Group>(null);
-  useFrame(({ clock }) => {
-    const el = group.current;
-    if (!el) return;
-    const y = window.scrollY || 0;
-    const t = clock.getElapsedTime();
-    const targetY = y * 0.0016;
-    const targetRot = Math.min(0.6, y * 0.00035);
-    el.position.y = THREE.MathUtils.lerp(el.position.y, targetY, 0.06);
-    el.rotation.y = THREE.MathUtils.lerp(
-      el.rotation.y,
-      targetRot + Math.sin(t * 0.08) * 0.06,
-      0.05,
-    );
+/**
+ * Runs first every frame: advances the render loop from GSAP's ticker (so
+ * scroll and rendering stay in one ordered loop) and refreshes the
+ * DOM-anchored layout. The camera never moves or zooms: a fov that follows
+ * scroll speed made the whole scene (and the phone) breathe while scrolling.
+ */
+function Controller() {
+  const advance = useThree((s) => s.advance);
+
+  useEffect(() => {
+    const drive = (time: number) => advance(time * 1000);
+    gsap.ticker.add(drive);
+    const cleanupPointer = initPointer();
+    return () => {
+      gsap.ticker.remove(drive);
+      cleanupPointer();
+    };
+  }, [advance]);
+
+  useFrame((state) => {
+    frame.time = state.clock.elapsedTime;
+    if (import.meta.env.DEV) (window as unknown as { __r3f?: unknown }).__r3f = state;
+    const cam = state.camera as THREE.PerspectiveCamera;
+    updateFrame(cam.fov, state.size.width, state.size.height);
   });
-  return <group ref={group}>{children}</group>;
+  return null;
 }
 
-function AuroraPlane() {
-  const mat = useRef<THREE.ShaderMaterial>(null);
-  const uniforms = useMemo(
-    () => ({
-      uTime: { value: 0 },
-      uViolet: { value: new THREE.Color("#a855f7") },
-      uCyan: { value: new THREE.Color("#22d3ee") },
-      uOrange: { value: new THREE.Color("#fb923c") },
-    }),
-    [],
-  );
-  useFrame(({ clock }) => {
-    if (mat.current) mat.current.uniforms.uTime.value = clock.getElapsedTime();
-  });
-  return (
-    <mesh position={[0, 0, -6]} scale={[16, 10, 1]}>
-      <planeGeometry args={[1, 1]} />
-      <shaderMaterial
-        ref={mat}
-        vertexShader={auroraVertex}
-        fragmentShader={auroraFragment}
-        uniforms={uniforms}
-        transparent
-        depthWrite={false}
-      />
-    </mesh>
-  );
+/** Fires once the first frame with all textures has been drawn. */
+function Ready({ onReady }: { onReady: () => void }) {
+  useEffect(() => {
+    let raf = 0;
+    let frames = 0;
+    const tick = () => {
+      if (++frames >= 3) {
+        onReady();
+        return;
+      }
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [onReady]);
+  return null;
 }
 
-function Shards() {
-  const items = useMemo(
-    () =>
-      Array.from({ length: 12 }, (_, i) => ({
-        pos: [
-          (Math.sin(i * 2.7) * 5.5) as number,
-          ((i % 4) - 1.5) * 1.8 as number,
-          (-2 - (i % 3) * 1.2) as number,
-        ] as [number, number, number],
-        scale: 0.18 + ((i * 37) % 10) / 28,
-        speed: 1 + ((i * 13) % 5) / 4,
-        color: i % 3 === 0 ? "#22d3ee" : i % 3 === 1 ? "#a855f7" : "#fb923c",
-      })),
-    [],
-  );
+function Lights() {
   return (
     <>
-      {items.map((s, i) => (
-        <Float key={i} speed={s.speed} rotationIntensity={0.6} floatIntensity={1.2}>
-          <mesh position={s.pos} scale={s.scale}>
-            <icosahedronGeometry args={[1, 0]} />
-            <meshStandardMaterial
-              color={s.color}
-              transparent
-              opacity={0.32}
-              roughness={0.35}
-              metalness={0.55}
-              emissive={s.color}
-              emissiveIntensity={0.25}
-            />
-          </mesh>
-        </Float>
-      ))}
+      <ambientLight intensity={0.55} />
+      <pointLight position={[3.5, 2.5, 4]} intensity={26} color="#a855f7" distance={16} />
+      <pointLight position={[-3.5, -1.5, 3.5]} intensity={20} color="#22d3ee" distance={16} />
+      <pointLight position={[0, 3, 2]} intensity={8} color="#ffffff" distance={12} />
     </>
   );
 }
 
-export default function SceneCanvas() {
-  const reduced =
-    typeof window !== "undefined" &&
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const saveData =
-    typeof navigator !== "undefined" &&
-    (navigator as unknown as { connection?: { saveData?: boolean } })
-      .connection?.saveData === true;
-  const noWebgl =
-    typeof window !== "undefined" && !reduced && !saveData && !webglAvailable();
+function Studio() {
+  // A procedural studio: soft boxes reflected in the phone's frame. No network.
+  return (
+    <Environment resolution={128} frames={1} background={false}>
+      <Lightformer form="rect" intensity={2.4} color="#a855f7" position={[-4, 3, 3]} scale={[7, 2, 1]} />
+      <Lightformer form="rect" intensity={2} color="#22d3ee" position={[4, -2, 3]} scale={[6, 2, 1]} />
+      <Lightformer form="rect" intensity={1.4} color="#ffffff" position={[0, 5, -2]} scale={[8, 1, 1]} />
+      <Lightformer form="circle" intensity={1.2} color="#fb923c" position={[0, -4, 2]} scale={3} />
+    </Environment>
+  );
+}
+
+export default function SceneCanvas({ onReady }: { onReady?: () => void }) {
+  const [cfg] = useState<TierConfig>(detectTier);
+  // Pixel budget. Every fragment shader runs once per pixel, so a huge window
+  // (or a zoomed-out browser, which is a huge window in CSS pixels) multiplies
+  // the cost. Render at most ~2.6 MP, whatever the window size.
+  const [budget, setBudget] = useState(() => pixelBudget(cfg));
+  // If frames still drop, step resolution DOWN. It never steps back up: a
+  // resolution that flips back and forth pops and reads as flicker.
+  const [level, setLevel] = useState(0);
+  useEffect(() => {
+    let timer = 0;
+    const onResize = () => {
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => setBudget(pixelBudget(cfg)), 300);
+    };
+    window.addEventListener("resize", onResize);
+    return () => {
+      window.clearTimeout(timer);
+      window.removeEventListener("resize", onResize);
+    };
+  }, [cfg]);
+  const dpr = Math.max(0.75, budget * (1 - 0.18 * level));
 
   useEffect(() => {
-    if (noWebgl) document.body.dataset.noWebgl = "true";
-  }, [noWebgl]);
-
-  if (reduced || saveData || noWebgl) return null;
-
-  const dpr: [number, number] =
-    typeof window !== "undefined" && window.innerWidth < 820
-      ? [1, 1.25]
-      : [1, 1.75];
+    document.documentElement.dataset.tier = cfg.tier;
+    return () => {
+      delete document.documentElement.dataset.tier;
+    };
+  }, [cfg.tier]);
 
   return (
     <div className="scene-canvas" aria-hidden="true">
       <Canvas
-        dpr={dpr}
-        camera={{ position: [0, 0, 6], fov: 55 }}
-        gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
+        frameloop="never"
+        dpr={[cfg.dpr[0], dpr]}
+        camera={{ position: [0, 0, frame.camZ], fov: BASE_FOV, near: 0.1, far: 90 }}
+        gl={{
+          antialias: cfg.antialias,
+          alpha: true,
+          powerPreference: "high-performance",
+          stencil: false,
+        }}
+        onCreated={({ gl }) => {
+          gl.setClearColor(0x000000, 0);
+          gl.domElement.addEventListener("webglcontextlost", (e) => {
+            e.preventDefault();
+            document.documentElement.classList.remove("gl-on");
+          });
+          gl.domElement.addEventListener("webglcontextrestored", () => {
+            document.documentElement.classList.add("gl-on");
+          });
+        }}
       >
-        <ambientLight intensity={0.7} />
-        <pointLight position={[4, 3, 4]} intensity={12} color="#a855f7" />
-        <pointLight position={[-4, -2, 3]} intensity={8} color="#22d3ee" />
+        <PerformanceMonitor onDecline={() => setLevel((l) => Math.min(2, l + 1))} />
+        <Controller />
+        <Nebula cfg={cfg} />
+        <Lights />
         <Suspense fallback={null}>
-          <ScrollRig>
-            <AuroraPlane />
-            <Stars
-              radius={30}
-              depth={20}
-              count={350}
-              factor={2.2}
-              saturation={0.4}
-              fade
-              speed={0.6}
-            />
-            <Shards />
-          </ScrollRig>
+          {cfg.environment && <Studio />}
+          <Signal cfg={cfg} />
+          {/* On touch the DOM phone is used: it scrolls in perfect sync. */}
+          {!isTouch() && <Phone />}
+          <Terrain cfg={cfg} />
+          <Ready
+            onReady={() => {
+              document.documentElement.classList.add("gl-on");
+              onReady?.();
+            }}
+          />
         </Suspense>
       </Canvas>
     </div>

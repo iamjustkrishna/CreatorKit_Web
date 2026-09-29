@@ -1,0 +1,107 @@
+- generic [ref=f1e3]:
+  - link "Skip to content" [ref=f1e4] [cursor=pointer]:
+    - /url: "#main"
+  - banner [ref=f1e5]:
+    - link "CreatorKit" [ref=f1e6] [cursor=pointer]:
+      - /url: "#top"
+    - generic [aria-hidden] [ref=f1e8]: MUTED
+    - navigation "Main navigation" [ref=f1e10]:
+      - link "What it does" [ref=f1e11] [cursor=pointer]:
+        - /url: "#workflow"
+      - link "Inside the app" [ref=f1e12] [cursor=pointer]:
+        - /url: "#showcase"
+      - link "Privacy" [ref=f1e13] [cursor=pointer]:
+        - /url: "#privacy"
+      - link "GitHub" [ref=f1e14] [cursor=pointer]:
+        - /url: https://github.com/iamjustkrishna/CreatorKit
+      - generic [ref=f1e15]:
+        - button "Turn sound on" [ref=f1e16] [cursor=pointer]: Sound off
+        - link "Get CreatorKit on Google Play" [ref=f1e22] [cursor=pointer]:
+          - /url: https://play.google.com/store/apps/details?id=space.iamjustkrishna.creatorkit
+          - generic [ref=f1e28]:
+            - generic [ref=f1e29]: Get it on
+            - text: Google Play
+  - main [ref=f1e30]:
+    - generic [ref=f1e31]:
+      - generic [ref=f1e32]: Free on Android · No ads · No account
+      - heading "Stop watching ads. Start creating." [level=1] [ref=f1e34]
+      - paragraph [ref=f1e35]: Extract audio, clean up vocals, and turn speech into text with one focused toolkit that keeps your media on your phone.
+      - generic [ref=f1e36]:
+        - link "Get CreatorKit on Google Play" [ref=f1e38] [cursor=pointer]:
+          - /url: https://play.google.com/store/apps/details?id=space.iamjustkrishna.creatorkit
+          - generic [ref=f1e44]:
+            - generic [ref=f1e45]: Get it on
+            - text: Google Play
+        - link "Explore the source" [ref=f1e46] [cursor=pointer]:
+          - /url: https://github.com/iamjustkrishna/CreatorKit
+      - generic "CreatorKit app preview" [ref=f1e49]:
+        - img "CreatorKit Audio Extractor interface" [ref=f1e53]
+        - generic [ref=f1e54]: Vocal clarity
+        - generic [ref=f1e57]: Files stay local
+      - generic [ref=f1e62]: SCROLL
+    - region "CreatorKit mission" [ref=f1e65]:
+      - paragraph [ref=f1e66]: One pocket studio, built for the moment between an idea and a finished file.
+      - generic [ref=f1e67]:
+        - generic [ref=f1e68]: Ad-free
+        - generic [ref=f1e69]: Open source
+        - generic [ref=f1e70]: Made for Android
+    - generic [ref=f1e71]:
+      - generic [ref=f1e72]:
+        - paragraph [ref=f1e73]: 01 / SIGNAL PATH
+        - heading "Everything your audio needs, in one flow." [level=2] [ref=f1e74]
+      - generic [ref=f1e75]:
+        - article [ref=f1e81]:
+          - generic [ref=f1e86]: "01"
+          - heading "Extract" [level=3] [ref=f1e87]
+          - paragraph [ref=f1e88]: Pull high-quality audio from a video.
+        - article [ref=f1e89]:
+          - generic [ref=f1e93]: "02"
+          - heading "Enhance" [level=3] [ref=f1e94]
+          - paragraph [ref=f1e95]: Reduce noise and bring the voice forward.
+        - article [ref=f1e96]:
+          - generic [ref=f1e101]: "03"
+          - heading "Transcribe" [level=3] [ref=f1e102]
+          - paragraph [ref=f1e103]: Turn English speech into editable text.
+        - article [ref=f1e104]:
+          - generic [ref=f1e108]: "04"
+          - heading "Keep" [level=3] [ref=f1e109]
+          - paragraph [ref=f1e110]: Play, share, and organize every output.
+    - generic [ref=f1e111]:
+      - img "CreatorKit Audio Extractor screen with format and processing controls" [ref=f1e114]
+      - generic [ref=f1e116]:
+        - paragraph [ref=f1e117]: 02 / INSIDE THE APP
+        - heading "Your work stays uncomplicated." [level=2] [ref=f1e118]
+        - tablist "CreatorKit feature previews" [ref=f1e119]:
+          - tab "Extract" [selected] [ref=f1e120] [cursor=pointer]
+          - tab "Transcribe" [ref=f1e124] [cursor=pointer]
+          - tab "Organize" [ref=f1e128] [cursor=pointer]
+        - tabpanel "Extract" [ref=f1e131]:
+          - heading "Turn video into clean audio." [level=3] [ref=f1e132]
+          - paragraph [ref=f1e133]: Choose the format that fits your workflow, from compact M4A to widely compatible MP3 and WAV.
+          - text: MP3, M4A, AAC and WAV
+    - generic [ref=f1e134]:
+      - paragraph [ref=f1e139]: 03 / PRIVATE BY DESIGN
+      - heading "The work happens on your device." [level=2] [ref=f1e140]
+      - paragraph [ref=f1e141]: CreatorKit processes your selected media on your phone. Your recordings and videos are not uploaded to a conversion server.
+      - link "Read the privacy policy" [ref=f1e142] [cursor=pointer]:
+        - /url: https://iamjustkrishna.github.io/privacy-policies/
+    - generic [ref=f1e173]:
+      - paragraph [ref=f1e174]: 04 / READY WHEN YOU ARE
+      - heading "Your next useful file is a few taps away." [level=2] [ref=f1e175]
+      - paragraph [ref=f1e177]: Free to download. No subscription and no ad breaks.
+      - link "Get CreatorKit on Google Play" [ref=f1e179] [cursor=pointer]:
+        - /url: https://play.google.com/store/apps/details?id=space.iamjustkrishna.creatorkit
+        - generic [ref=f1e185]:
+          - generic [ref=f1e186]: Get it on
+          - text: Google Play
+  - contentinfo [ref=f1e187]:
+    - link "CreatorKit" [ref=f1e188] [cursor=pointer]:
+      - /url: "#top"
+    - paragraph [ref=f1e190]: Built for creators who would rather create.
+    - generic [ref=f1e191]:
+      - link "Privacy" [ref=f1e192] [cursor=pointer]:
+        - /url: https://iamjustkrishna.github.io/privacy-policies/
+      - link "GitHub" [ref=f1e193] [cursor=pointer]:
+        - /url: https://github.com/iamjustkrishna/CreatorKit
+      - link "Contact" [ref=f1e194] [cursor=pointer]:
+        - /url: mailto:mastersimpleapps@gmail.com

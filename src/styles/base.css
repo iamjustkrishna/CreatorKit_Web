@@ -1,0 +1,420 @@
+@font-face {
+  font-family: "Instrument Serif";
+  src: url("/assets/fonts/instrument-serif.ttf") format("truetype");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "Playpen Sans";
+  src: url("/assets/fonts/playpen-sans.ttf") format("truetype");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 100 800;
+}
+
+@property --ang {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+:root {
+  color-scheme: dark;
+  --night: #07040d;
+  --ink: #0a0712;
+  --studio: #1b1428;
+  --studio-2: #241a36;
+  --violet: #a855f7;
+  --violet-deep: #7924da;
+  --cyan: #22d3ee;
+  --orange: #fb923c;
+  --pink: #f472b6;
+  --light: #f9f6ff;
+  --muted: #c7bad9;
+  --dim: #8f81a5;
+  --line: rgba(229, 213, 255, 0.14);
+  --line-strong: rgba(229, 213, 255, 0.26);
+  --frame: min(1240px, calc(100% - 48px));
+
+  --font-display: "Instrument Serif", "Iowan Old Style", Georgia, serif;
+  --font-body: "Playpen Sans", system-ui, sans-serif;
+  --font-mono: "Martian Mono Variable", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  /* Motion language: two curves plus one branded pop. */
+  --ease-enter: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-exit: cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-move: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-pop: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  font-family: var(--font-body);
+  color: var(--light);
+  background: var(--night);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-padding-top: 96px;
+}
+
+html.gate-open,
+html.gate-open body,
+html.menu-open,
+html.menu-open body {
+  overflow: hidden;
+}
+
+/* Nothing may widen the page: a few px of sideways overflow makes a phone
+   wobble horizontally as you scroll. Vertical pan and pinch-zoom only. */
+html,
+body {
+  overflow-x: clip;
+  overscroll-behavior-x: none;
+}
+
+html {
+  touch-action: pan-y pinch-zoom;
+}
+
+/* Lenis owns smooth scrolling; native smooth would fight it. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background: var(--night);
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+a {
+  font: inherit;
+}
+
+button {
+  color: inherit;
+}
+
+a {
+  color: inherit;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+}
+
+::selection {
+  color: var(--night);
+  background: var(--cyan);
+}
+
+.skip-link {
+  position: fixed;
+  z-index: 1000;
+  top: 12px;
+  left: 12px;
+  padding: 10px 14px;
+  color: var(--night);
+  background: var(--light);
+  border-radius: 999px;
+  transform: translateY(-150%);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+:focus-visible {
+  outline: 3px solid var(--cyan);
+  outline-offset: 4px;
+}
+
+/* ---------- Shell & atmosphere ---------- */
+.site-shell {
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+  overflow-x: clip;
+}
+
+/* CSS-only backdrop: what visitors see with no WebGL (and under it, always). */
+.atmosphere {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 100%;
+  /* Large viewport: never resizes when a phone's address bar slides away. */
+  height: 100lvh;
+  z-index: -2;
+  pointer-events: none;
+  background:
+    radial-gradient(60% 50% at 78% 12%, rgba(168, 85, 247, 0.2), transparent 70%),
+    radial-gradient(50% 45% at 8% 42%, rgba(34, 211, 238, 0.11), transparent 70%),
+    radial-gradient(60% 45% at 50% 100%, rgba(251, 146, 60, 0.08), transparent 70%),
+    var(--night);
+}
+
+/* Console grid, fading out from the top. */
+.atmosphere::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(168, 85, 247, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(168, 85, 247, 0.05) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse 90% 70% at 50% 25%, #000 25%, transparent 75%);
+}
+
+/* Fine film grain keeps the dark gradients from banding. */
+.atmosphere::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.07;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+.scene-canvas {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 100%;
+  /* Large viewport: the WebGL canvas must not resize while scrolling on a
+     phone, or the whole scene flashes and re-lays-out. */
+  height: 100lvh;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.scene-canvas canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* ---------- First-load hiding (motion only) ---------- */
+.will-intro [data-hero],
+.will-intro [data-header],
+.will-intro .hud,
+.will-intro .progress-line {
+  opacity: 0;
+}
+.will-intro .hero-title {
+  visibility: hidden;
+}
+
+/* ---------- Shared type ---------- */
+.module-label {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  margin: 0 0 20px;
+  color: var(--cyan);
+  font: 500 0.68rem/1 var(--font-mono);
+  letter-spacing: 0.22em;
+}
+
+.module-label::before,
+.module-label--center::after {
+  content: "";
+  width: 28px;
+  height: 1px;
+  background: currentColor;
+}
+
+.module-label--center {
+  justify-content: center;
+}
+
+.module-title {
+  margin: 0;
+  font-size: clamp(2.5rem, 5.4vw, 5rem);
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+}
+
+/* SplitText masks would clip descenders at this line-height. */
+.title-line-mask {
+  padding-bottom: 0.14em;
+  margin-bottom: -0.14em;
+}
+
+/* ---------- Buttons ---------- */
+.store-button {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  min-height: 64px;
+  padding: 10px 22px;
+  gap: 12px;
+  align-items: center;
+  color: var(--light);
+  border-radius: 18px;
+  background: #050507;
+  box-shadow:
+    0 14px 40px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  text-decoration: none;
+  transition: box-shadow 240ms var(--ease-enter);
+  overflow: hidden; /* clips the hover shine; box-shadow still shows */
+  will-change: transform;
+}
+
+/* A slow conic light circling the button's edge. */
+.store-button::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: conic-gradient(
+    from var(--ang),
+    rgba(249, 246, 255, 0.16) 0 40%,
+    var(--cyan),
+    var(--violet),
+    var(--orange),
+    rgba(249, 246, 255, 0.16) 92%
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: spin-ang 5s linear infinite;
+}
+
+/* Shine sweep on hover. */
+.store-button::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.16) 50%, transparent 65%);
+  transform: translateX(-120%);
+  transition: transform 700ms var(--ease-enter);
+  pointer-events: none;
+}
+
+.store-button:hover {
+  box-shadow:
+    0 18px 50px rgba(0, 0, 0, 0.5),
+    0 0 44px rgba(168, 85, 247, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.store-button:hover::after {
+  transform: translateX(120%);
+}
+
+@keyframes spin-ang {
+  to {
+    --ang: 360deg;
+  }
+}
+
+.store-button span {
+  display: grid;
+  font-weight: 600;
+  font-size: 1rem;
+  line-height: 1.15;
+}
+
+.store-button small {
+  margin-bottom: 2px;
+  font-size: 0.62rem;
+  font-weight: 400;
+}
+
+.play-mark {
+  width: 25px;
+  height: 28px;
+  flex: 0 0 auto;
+}
+
+.store-button--compact {
+  min-height: 48px;
+  padding: 8px 15px;
+  border-radius: 14px;
+}
+
+.store-button--compact span {
+  font-size: 0.8rem;
+}
+
+.store-button--compact small {
+  font-size: 0.52rem;
+}
+
+.store-button--compact .play-mark {
+  width: 20px;
+  height: 22px;
+}
+
+.text-link {
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  color: var(--light);
+  font-size: 0.86rem;
+  text-decoration: underline;
+  text-decoration-color: rgba(249, 246, 255, 0.35);
+  text-underline-offset: 6px;
+  transition: text-decoration-color 200ms var(--ease-enter), color 200ms var(--ease-enter);
+}
+
+.text-link:hover {
+  color: var(--cyan);
+  text-decoration-color: var(--cyan);
+}
+
+/* ---------- Reduced motion: tier the motion, do not nuke it ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .store-button::before {
+    animation: none;
+  }
+}

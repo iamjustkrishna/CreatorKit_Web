@@ -25,4 +25,11 @@ export default tseslint.config(
       ],
     },
   },
+  {
+    // R3F drives uniforms, transforms and textures imperatively inside
+    // useFrame — the intended pattern, and a known false positive for the
+    // React-compiler mutation rule.
+    files: ["src/scene/**/*.{ts,tsx}"],
+    rules: { "react-hooks/immutability": "off" },
+  },
 );

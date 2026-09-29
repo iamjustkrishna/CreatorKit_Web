@@ -1,42 +1,56 @@
-import { Icon, type IconName } from "./Icons";
-
-const workflow: { icon: IconName; title: string; text: string }[] = [
-  { icon: "video", title: "Extract", text: "Pull high-quality audio from a video." },
-  { icon: "wave", title: "Enhance", text: "Reduce noise and bring the voice forward." },
-  { icon: "captions", title: "Transcribe", text: "Turn English speech into editable text." },
-  { icon: "folder", title: "Keep", text: "Play, share, and organize every output." },
-];
+import { workflow } from "../content";
+import { Icon } from "./Icons";
 
 export default function Workflow() {
   return (
-    <section className="signal-journey" id="workflow">
-      <div data-reveal>
-        <p className="module-label">01 / SIGNAL PATH</p>
-        <h2 className="module-title">Everything your audio needs, in one flow.</h2>
-      </div>
+    <section className="wf" id="workflow" data-chapter="workflow">
+      <div className="wf-inner">
+        <header className="wf-head">
+          <p className="module-label" data-label>
+            01 / SIGNAL PATH
+          </p>
+          <h2 className="module-title" data-title>
+            Everything your audio needs, in one flow.
+          </h2>
+        </header>
 
-      <div className="journey-grid" data-journey>
-        <div className="journey-spine" aria-hidden="true">
-          <div className="journey-progress" data-journey-progress />
-          {workflow.map((step, i) => (
-            <span
-              key={step.title}
-              className="beat-node"
-              data-beat-node={i}
-              style={{ left: `${12.5 + i * 25}%` }}
-            />
-          ))}
-        </div>
-        {workflow.map((step, index) => (
-          <article className="module-card" key={step.title} data-journey-card>
-            <div className="module-icon">
-              <Icon name={step.icon} size={24} />
+        <div className="wf-body">
+          <ol className="wf-steps" aria-label="How CreatorKit works">
+            {workflow.map((step, index) => (
+              <li className="wf-step" key={step.title} data-wf-step={index}>
+                <div className="wf-step-bar" aria-hidden="true">
+                  <i />
+                </div>
+                <div className="wf-step-icon" aria-hidden="true">
+                  <Icon name={step.icon} size={22} />
+                </div>
+                <div className="wf-step-copy">
+                  <span className="wf-step-num" aria-hidden="true">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <h3>{step.title}</h3>
+                  <p>{step.text}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+
+          {/* The particle signal docks here. Purely visual. */}
+          <div className="wf-signal" data-anchor="wf-signal" aria-hidden="true">
+            <span className="wf-corner wf-corner--tl" />
+            <span className="wf-corner wf-corner--tr" />
+            <span className="wf-corner wf-corner--bl" />
+            <span className="wf-corner wf-corner--br" />
+            <div className="wf-readout">
+              <span className="wf-readout-tag" data-wf-tag>
+                {workflow[0].tag}
+              </span>
+              <span className="wf-readout-text" data-wf-readout>
+                {workflow[0].readout}
+              </span>
             </div>
-            <div className="module-num">{String(index + 1).padStart(2, "0")}</div>
-            <h3>{step.title}</h3>
-            <p>{step.text}</p>
-          </article>
-        ))}
+          </div>
+        </div>
       </div>
     </section>
   );

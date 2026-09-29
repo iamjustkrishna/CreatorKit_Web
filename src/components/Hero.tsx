@@ -1,76 +1,76 @@
-import { GITHUB_URL } from "./StoreButton";
-import StoreButton from "./StoreButton";
+import StoreButton, { GITHUB_URL } from "./StoreButton";
 import { Icon } from "./Icons";
 
 export default function Hero() {
   return (
-    <section className="hero-cine" id="top">
-      <div className="availability" data-hero-slot="0">
-        <span className="availability-dot" />
-        Free on Android · No ads · No account
-      </div>
+    <section className="hero" id="top" data-chapter="hero">
+      <div className="hero-copy">
+        <p className="availability" data-hero="rise">
+          <span className="availability-dot" aria-hidden="true" />
+          Free on Android · No ads · No account
+        </p>
 
-      <h1 data-split data-hero-slot="1">
-        Stop watching ads. Start creating.
-      </h1>
+        <h1 className="hero-title" data-hero-title>
+          <span className="hero-line">
+            Stop watching <span className="ads-word">ads.</span>
+          </span>{" "}
+          <span className="hero-line hero-line--accent">Start creating.</span>
+        </h1>
 
-      <p className="hero-lede" data-hero-slot="2">
-        Extract audio, clean up vocals, and turn speech into text with one
-        focused toolkit that keeps your media on your phone.
-      </p>
+        <p className="hero-lede" data-hero="rise">
+          Extract audio, clean up vocals, and turn speech into text with one
+          focused toolkit that keeps your media on your phone.
+        </p>
 
-      <div className="hero-actions" data-hero-slot="2">
-        <span className="crescendo-btn" style={{ display: "inline-flex" }}>
+        <div className="hero-actions" data-hero="rise">
           <StoreButton />
-        </span>
-        <a
-          className="text-link"
-          href={GITHUB_URL}
-          target="_blank"
-          rel="noreferrer"
-        >
-          <Icon name="github" size={21} />
-          Explore the source
-        </a>
+          <a className="text-link" href={GITHUB_URL} target="_blank" rel="noreferrer">
+            <Icon name="github" size={21} />
+            Explore the source
+          </a>
+        </div>
+
+        <ul className="hero-meta" data-hero="rise" aria-label="Highlights">
+          <li>Android 10+</li>
+          <li>On-device</li>
+          <li>Open source</li>
+        </ul>
       </div>
 
+      {/* The 3D phone docks to this box. The <img> is the no-WebGL fallback. */}
       <div
         className="hero-stage"
-        aria-label="CreatorKit app preview"
-        data-hero-slot="3"
+        data-anchor="hero-phone"
+        data-hero="stage"
+        role="img"
+        aria-label="CreatorKit Audio Extractor interface on a phone"
       >
-        <div className="hero-stage-glow" aria-hidden="true" />
-        <div className="phone phone--ghost" aria-hidden="true">
-          <img
-            src="/assets/screenshot-transcriber.png"
-            alt=""
-            width="1080"
-            height="2400"
-          />
-        </div>
-        <div className="phone phone--lead tilt" data-tilt data-float>
+        <div className="phone-fallback" aria-hidden="true">
           <img
             src="/assets/screenshot-extractor.png"
-            alt="CreatorKit Audio Extractor interface"
+            alt=""
             width="1080"
             height="2285"
+            fetchPriority="high"
           />
         </div>
-        <div className="hero-badges hero-badges--a" data-float>
-          <Icon name="wave" size={17} />
+        <div className="glass-chip glass-chip--a" data-hero="chip" aria-hidden="true">
+          <Icon name="wave" size={16} />
           Vocal clarity
         </div>
-        <div className="hero-badges hero-badges--b" data-float-delayed>
-          <Icon name="shield" size={17} />
+        <div className="glass-chip glass-chip--b" data-hero="chip" aria-hidden="true">
+          <Icon name="shield" size={16} />
           Files stay local
+        </div>
+        <div className="glass-chip glass-chip--c" data-hero="chip" aria-hidden="true">
+          <Icon name="captions" size={16} />
+          Speech to text
         </div>
       </div>
 
-      <div className="scroll-cue" aria-hidden="true" data-hero-slot="4">
-        <span>SCROLL</span>
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-          <path d="m6 9 6 6 6-6" />
-        </svg>
+      <div className="scroll-cue" aria-hidden="true" data-hero="fade">
+        <span>Scroll</span>
+        <i />
       </div>
     </section>
   );

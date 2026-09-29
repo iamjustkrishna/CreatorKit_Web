@@ -1,137 +1,108 @@
-import { useRef, useState } from "react";
-import { Icon, type IconName } from "./Icons";
-
-type ShowcaseTool = {
-  id: "extract" | "transcribe" | "organize";
-  shortLabel: string;
-  title: string;
-  description: string;
-  detail: string;
-  image: string;
-  imageHeight: number;
-  alt: string;
-  icon: IconName;
-};
-
-const showcaseTools: ShowcaseTool[] = [
-  {
-    id: "extract",
-    shortLabel: "Extract",
-    title: "Turn video into clean audio.",
-    description:
-      "Choose the format that fits your workflow, from compact M4A to widely compatible MP3 and WAV.",
-    detail: "MP3, M4A, AAC and WAV",
-    image: "/assets/screenshot-extractor.png",
-    imageHeight: 2285,
-    alt: "CreatorKit Audio Extractor screen with format and processing controls",
-    icon: "video",
-  },
-  {
-    id: "transcribe",
-    shortLabel: "Transcribe",
-    title: "Make spoken ideas editable.",
-    description:
-      "Select audio or video and turn English speech into a transcript you can read, edit, and reuse.",
-    detail: "On-device Moonshine ASR",
-    image: "/assets/screenshot-transcriber.png",
-    imageHeight: 2400,
-    alt: "CreatorKit AI Transcriber screen with recent transcripts",
-    icon: "captions",
-  },
-  {
-    id: "organize",
-    shortLabel: "Organize",
-    title: "Keep every output in reach.",
-    description:
-      "Browse exports by tool, play finished audio, open transcripts, share files, or move them into your own folders.",
-    detail: "One local media library",
-    image: "/assets/screenshot-library.png",
-    imageHeight: 2400,
-    alt: "CreatorKit Library screen grouping transcripts and enhanced audio",
-    icon: "folder",
-  },
-];
+import { useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
+import { showcaseTools } from "../content";
+import { selectTab } from "../scene/phoneState";
+import { Icon } from "./Icons";
 
 export default function Showcase() {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [direction, setDirection] = useState<1 | -1>(1);
-  const [leaving, setLeaving] = useState<ShowcaseTool | null>(null);
-  const timer = useRef(0);
-  const activeTool = showcaseTools[activeIndex];
+  const [active, setActive] = useState(0);
+  const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const tool = showcaseTools[active];
 
-  const select = (next: number) => {
-    if (next === activeIndex) return;
-    setDirection(next > activeIndex ? 1 : -1);
-    setLeaving(showcaseTools[activeIndex]);
-    window.clearTimeout(timer.current);
-    timer.current = window.setTimeout(() => setLeaving(null), 250);
-    setActiveIndex(next);
+  const select = (next: number, focus = false) => {
+    if (next === active) return;
+    setActive(next);
+    // The 3D phone reads the tab; the crossfade starts right away.
+    selectTab(next);
+    if (focus) tabRefs.current[next]?.focus();
   };
 
-  const inClass = direction === 1 ? "slide-in-right" : "slide-in-left";
-  const outClass = direction === 1 ? "slide-out-left" : "slide-out-right";
+  const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    const last = showcaseTools.length - 1;
+    const keys: Record<string, number> = {
+      ArrowRight: active === last ? 0 : active + 1,
+      ArrowDown: active === last ? 0 : active + 1,
+      ArrowLeft: active === 0 ? last : active - 1,
+      ArrowUp: active === 0 ? last : active - 1,
+      Home: 0,
+      End: last,
+    };
+    const next = keys[e.key];
+    if (next === undefined) return;
+    e.preventDefault();
+    select(next, true);
+  };
 
   return (
-    <section className="showcase-cine" id="showcase">
-      <div className="stage-frame" data-reveal data-tool={activeTool.id}>
-        <div className="stage-screen tilt" data-tilt>
-          {leaving && (
+    <section className="showcase" id="showcase" data-chapter="showcase">
+      <div
+        className="showcase-stage"
+        data-anchor="show-phone"
+        data-tool={tool.id}
+        role="img"
+        aria-label={tool.alt}
+      >
+        <div className="phone-fallback" aria-hidden="true">
+          {showcaseTools.map((t, i) => (
             <img
-              src={leaving.image}
+              key={t.id}
+              className={i === active ? "is-active" : ""}
+              src={t.image}
               alt=""
-              aria-hidden="true"
               width="1080"
-              height={leaving.imageHeight}
-              className={outClass}
+              height="2400"
+              loading="lazy"
             />
-          )}
-          <img
-            key={activeTool.id}
-            src={activeTool.image}
-            alt={activeTool.alt}
-            width="1080"
-            height={activeTool.imageHeight}
-            className={inClass}
-          />
+          ))}
         </div>
-        <div className="screen-aura" aria-hidden="true" />
       </div>
 
-      <div data-reveal>
-        <p className="module-label">02 / INSIDE THE APP</p>
-        <h2 className="module-title">Your work stays uncomplicated.</h2>
+      <div className="showcase-copy">
+        <p className="module-label" data-label>
+          02 / INSIDE THE APP
+        </p>
+        <h2 className="module-title" data-title>
+          Your work stays uncomplicated.
+        </h2>
+
         <div
-          className="console-tabs"
+          className="tabs"
           role="tablist"
           aria-label="CreatorKit feature previews"
+          style={{ "--i": active } as CSSProperties}
+          onKeyDown={onKeyDown}
+          data-reveal
         >
-          {showcaseTools.map((tool, i) => (
+          {showcaseTools.map((t, i) => (
             <button
-              key={tool.id}
-              id={`tab-${tool.id}`}
+              key={t.id}
+              ref={(el) => {
+                tabRefs.current[i] = el;
+              }}
+              id={`tab-${t.id}`}
               type="button"
               role="tab"
-              aria-selected={i === activeIndex}
+              tabIndex={i === active ? 0 : -1}
+              aria-selected={i === active}
               aria-controls="tool-panel"
-              className={i === activeIndex ? "is-active" : ""}
+              className={i === active ? "is-active" : ""}
               onClick={() => select(i)}
             >
-              <Icon name={tool.icon} size={18} />
-              {tool.shortLabel}
+              <Icon name={t.icon} size={18} />
+              {t.shortLabel}
             </button>
           ))}
         </div>
 
         <div
-          className="tool-detail"
+          className="tool-panel"
           id="tool-panel"
           role="tabpanel"
-          aria-labelledby={`tab-${activeTool.id}`}
-          key={`panel-${activeTool.id}`}
+          aria-labelledby={`tab-${tool.id}`}
+          key={tool.id}
         >
-          <h3>{activeTool.title}</h3>
-          <p>{activeTool.description}</p>
-          <span>{activeTool.detail}</span>
+          <h3>{tool.title}</h3>
+          <p>{tool.description}</p>
+          <span className="tool-detail">{tool.detail}</span>
         </div>
       </div>
     </section>

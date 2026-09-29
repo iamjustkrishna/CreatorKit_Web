@@ -1,34 +1,33 @@
-import type { CSSProperties } from "react";
-import StoreButton from "./StoreButton";
+import StoreButton, { GITHUB_URL } from "./StoreButton";
 
 export default function FinalCTA() {
   return (
-    <section className="cta-crescendo" data-reveal>
-      <div className="cta-wave" aria-hidden="true" data-cta-wave>
-        {Array.from({ length: 28 }, (_, index) => (
-          <span
-            key={index}
-            data-wave-bar
-            style={{ "--bar": `${18 + ((index * 29) % 68)}%` } as CSSProperties}
-          />
-        ))}
+    <section className="cta" id="cta" data-chapter="cta">
+      {/* The radial equaliser docks to this box; the icon sits at its centre. */}
+      <div className="cta-ring" data-anchor="cta-ring" aria-hidden="true">
+        <span className="cta-icon">
+          <img src="/assets/creator-kit-icon.png" alt="" width="96" height="96" />
+        </span>
       </div>
-      <div className="final-cta-content">
-        <img src="/assets/creator-kit-icon.png" alt="" data-icon-spin />
-        <p className="module-label" style={{ justifyContent: "center" }}>
+
+      <div className="cta-content">
+        <p className="module-label module-label--center" data-label>
           04 / READY WHEN YOU ARE
         </p>
-        <h2>
-          <span className="crescendo-pop" data-crescendo>
-            Your next useful file is a few taps away.
-          </span>
+        <h2 className="cta-title" data-cta-title>
+          Your next useful file is a few taps away.
         </h2>
-        <p style={{ color: "var(--muted)", fontSize: "0.82rem" }}>
+        <p className="cta-sub" data-reveal>
           Free to download. No subscription and no ad breaks.
         </p>
-        <span className="crescendo-btn" style={{ display: "inline-flex" }}>
-          <StoreButton />
-        </span>
+        <div className="cta-actions" data-reveal>
+          <span className="cta-button">
+            <StoreButton />
+          </span>
+          <a className="text-link" href={GITHUB_URL} target="_blank" rel="noreferrer">
+            Read the source
+          </a>
+        </div>
       </div>
     </section>
   );

@@ -2,12 +2,12 @@ import { GITHUB_URL, PRIVACY_URL } from "./StoreButton";
 
 export default function Footer() {
   return (
-    <footer className="footer-strip">
-      <a className="console-brand brand--footer" href="#top">
-        <img src="/assets/creator-kit-icon.png" alt="" />
+    <footer className="footer">
+      <a className="brand brand--footer" href="#top">
+        <img src="/assets/creator-kit-icon.png" alt="" width="32" height="32" />
         <span>CreatorKit</span>
       </a>
-      <p style={{ margin: 0 }}>Built for creators who would rather create.</p>
+      <p>Built for creators who would rather create.</p>
       <div className="footer-links">
         <a href={PRIVACY_URL} target="_blank" rel="noreferrer">
           Privacy

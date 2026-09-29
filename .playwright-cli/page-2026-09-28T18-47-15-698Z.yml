@@ -1,0 +1,137 @@
+- generic [ref=e3]:
+  - link "Skip to content" [ref=e4] [cursor=pointer]:
+    - /url: "#main"
+  - banner [ref=e5]:
+    - link "CreatorKit" [ref=e6] [cursor=pointer]:
+      - /url: "#top"
+    - generic [aria-hidden] [ref=e8]: MUTED
+    - navigation "Main navigation" [ref=e10]:
+      - link "What it does" [ref=e11] [cursor=pointer]:
+        - /url: "#workflow"
+      - link "Inside the app" [ref=e12] [cursor=pointer]:
+        - /url: "#showcase"
+      - link "Privacy" [ref=e13] [cursor=pointer]:
+        - /url: "#privacy"
+      - link "GitHub" [ref=e14] [cursor=pointer]:
+        - /url: https://github.com/iamjustkrishna/CreatorKit
+      - generic [ref=e15]:
+        - button "Turn sound on" [ref=e16] [cursor=pointer]: Sound off
+        - link "Get CreatorKit on Google Play" [ref=e22] [cursor=pointer]:
+          - /url: https://play.google.com/store/apps/details?id=space.iamjustkrishna.creatorkit
+          - generic [ref=e28]:
+            - generic [ref=e29]: Get it on
+            - text: Google Play
+  - main [ref=e30]:
+    - generic [ref=e31]:
+      - generic [ref=e32]: Free on Android · No ads · No account
+      - heading "S t o p w a t c h i n g a d s . S t a r t c r e a t i n g ." [level=1] [ref=e34]:
+        - generic [ref=e35]: S
+        - generic [ref=e36]: t
+        - generic [ref=e37]: o
+        - generic [ref=e38]: p
+        - generic [ref=e39]: w
+        - generic [ref=e40]: a
+        - generic [ref=e41]: t
+        - generic [ref=e42]: c
+        - generic [ref=e43]: h
+        - generic [ref=e44]: i
+        - generic [ref=e45]: "n"
+        - generic [ref=e46]: g
+        - generic [ref=e47]: a
+        - generic [ref=e48]: d
+        - generic [ref=e49]: s
+        - generic [ref=e50]: .
+        - generic [ref=e51]: S
+        - generic [ref=e52]: t
+        - generic [ref=e53]: a
+        - generic [ref=e54]: r
+        - generic [ref=e55]: t
+        - generic [ref=e56]: c
+        - generic [ref=e57]: r
+        - generic [ref=e58]: e
+        - generic [ref=e59]: a
+        - generic [ref=e60]: t
+        - generic [ref=e61]: i
+        - generic [ref=e62]: "n"
+        - generic [ref=e63]: g
+        - generic [ref=e64]: .
+      - paragraph [ref=e65]: Extract audio, clean up vocals, and turn speech into text with one focused toolkit that keeps your media on your phone.
+      - generic [ref=e66]:
+        - link "Get CreatorKit on Google Play" [ref=e68] [cursor=pointer]:
+          - /url: https://play.google.com/store/apps/details?id=space.iamjustkrishna.creatorkit
+          - generic [ref=e74]:
+            - generic [ref=e75]: Get it on
+            - text: Google Play
+        - link "Explore the source" [ref=e76] [cursor=pointer]:
+          - /url: https://github.com/iamjustkrishna/CreatorKit
+      - generic "CreatorKit app preview" [ref=e79]:
+        - img "CreatorKit Audio Extractor interface" [ref=e83]
+        - generic [ref=e84]: Vocal clarity
+        - generic [ref=e87]: Files stay local
+      - generic [ref=e92]: SCROLL
+    - region "CreatorKit mission" [ref=e95]:
+      - paragraph [ref=e96]: One pocket studio, built for the moment between an idea and a finished file.
+      - generic [ref=e97]:
+        - generic [ref=e98]: Ad-free
+        - generic [ref=e99]: Open source
+        - generic [ref=e100]: Made for Android
+    - generic [ref=e101]:
+      - generic [ref=e102]:
+        - paragraph [ref=e103]: 01 / SIGNAL PATH
+        - heading "Everything your audio needs, in one flow." [level=2] [ref=e104]
+      - generic [ref=e105]:
+        - article [ref=e111]:
+          - generic [ref=e116]: "01"
+          - heading "Extract" [level=3] [ref=e117]
+          - paragraph [ref=e118]: Pull high-quality audio from a video.
+        - article [ref=e119]:
+          - generic [ref=e123]: "02"
+          - heading "Enhance" [level=3] [ref=e124]
+          - paragraph [ref=e125]: Reduce noise and bring the voice forward.
+        - article [ref=e126]:
+          - generic [ref=e131]: "03"
+          - heading "Transcribe" [level=3] [ref=e132]
+          - paragraph [ref=e133]: Turn English speech into editable text.
+        - article [ref=e134]:
+          - generic [ref=e138]: "04"
+          - heading "Keep" [level=3] [ref=e139]
+          - paragraph [ref=e140]: Play, share, and organize every output.
+    - generic [ref=e141]:
+      - img "CreatorKit Audio Extractor screen with format and processing controls" [ref=e144]
+      - generic [ref=e146]:
+        - paragraph [ref=e147]: 02 / INSIDE THE APP
+        - heading "Your work stays uncomplicated." [level=2] [ref=e148]
+        - tablist "CreatorKit feature previews" [ref=e149]:
+          - tab "Extract" [selected] [ref=e150] [cursor=pointer]
+          - tab "Transcribe" [ref=e154] [cursor=pointer]
+          - tab "Organize" [ref=e158] [cursor=pointer]
+        - tabpanel "Extract" [ref=e161]:
+          - heading "Turn video into clean audio." [level=3] [ref=e162]
+          - paragraph [ref=e163]: Choose the format that fits your workflow, from compact M4A to widely compatible MP3 and WAV.
+          - text: MP3, M4A, AAC and WAV
+    - generic [ref=e164]:
+      - paragraph [ref=e169]: 03 / PRIVATE BY DESIGN
+      - heading "The work happens on your device." [level=2] [ref=e170]
+      - paragraph [ref=e171]: CreatorKit processes your selected media on your phone. Your recordings and videos are not uploaded to a conversion server.
+      - link "Read the privacy policy" [ref=e172] [cursor=pointer]:
+        - /url: https://iamjustkrishna.github.io/privacy-policies/
+    - generic [ref=e203]:
+      - paragraph [ref=e204]: 04 / READY WHEN YOU ARE
+      - heading "Your next useful file is a few taps away." [level=2] [ref=e205]
+      - paragraph [ref=e207]: Free to download. No subscription and no ad breaks.
+      - link "Get CreatorKit on Google Play" [ref=e209] [cursor=pointer]:
+        - /url: https://play.google.com/store/apps/details?id=space.iamjustkrishna.creatorkit
+        - generic [ref=e215]:
+          - generic [ref=e216]: Get it on
+          - text: Google Play
+  - contentinfo [ref=e217]:
+    - link "CreatorKit" [ref=e218] [cursor=pointer]:
+      - /url: "#top"
+    - paragraph [ref=e220]: Built for creators who would rather create.
+    - generic [ref=e221]:
+      - link "Privacy" [ref=e222] [cursor=pointer]:
+        - /url: https://iamjustkrishna.github.io/privacy-policies/
+      - link "GitHub" [ref=e223] [cursor=pointer]:
+        - /url: https://github.com/iamjustkrishna/CreatorKit
+      - link "Contact" [ref=e224] [cursor=pointer]:
+        - /url: mailto:mastersimpleapps@gmail.com
