@@ -1,6 +1,5 @@
 import { useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
 import { showcaseTools } from "../content";
-import { selectTab } from "../scene/phoneState";
 import { Icon } from "./Icons";
 
 export default function Showcase() {
@@ -9,14 +8,11 @@ export default function Showcase() {
   const tool = showcaseTools[active];
 
   const select = (next: number, focus = false) => {
-    if (next === active) return;
     setActive(next);
-    // The 3D phone reads the tab; the crossfade starts right away.
-    selectTab(next);
     if (focus) tabRefs.current[next]?.focus();
   };
 
-  const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+  const onKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     const last = showcaseTools.length - 1;
     const keys: Record<string, number> = {
       ArrowRight: active === last ? 0 : active + 1,
@@ -26,83 +22,70 @@ export default function Showcase() {
       Home: 0,
       End: last,
     };
-    const next = keys[e.key];
+    const next = keys[event.key];
     if (next === undefined) return;
-    e.preventDefault();
+    event.preventDefault();
     select(next, true);
   };
 
   return (
-    <section className="showcase" id="showcase" data-chapter="showcase">
-      <div
-        className="showcase-stage"
-        data-anchor="show-phone"
-        data-tool={tool.id}
-        role="img"
-        aria-label={tool.alt}
-      >
-        <div className="phone-fallback" aria-hidden="true">
-          {showcaseTools.map((t, i) => (
+    <section className="showcase-section section-space" id="inside" aria-labelledby="inside-title">
+      <div className="showcase-layout page-width">
+        <div className="showcase-visual" data-reveal>
+          <div className="showcase-image-wrap">
             <img
-              key={t.id}
-              className={i === active ? "is-active" : ""}
-              src={t.image}
-              alt=""
+              key={tool.image}
+              src={tool.image}
+              alt={tool.alt}
               width="1080"
               height="2400"
               loading="lazy"
             />
-          ))}
+          </div>
+          <p className="screenshot-caption">A closer look at CreatorKit on Android</p>
         </div>
-      </div>
-
-      <div className="showcase-copy">
-        <p className="module-label" data-label>
-          02 / INSIDE THE APP
-        </p>
-        <h2 className="module-title" data-title>
-          Your work stays uncomplicated.
-        </h2>
-
-        <div
-          className="tabs"
-          role="tablist"
-          aria-label="CreatorKit feature previews"
-          style={{ "--i": active } as CSSProperties}
-          onKeyDown={onKeyDown}
-          data-reveal
-        >
-          {showcaseTools.map((t, i) => (
-            <button
-              key={t.id}
-              ref={(el) => {
-                tabRefs.current[i] = el;
-              }}
-              id={`tab-${t.id}`}
-              type="button"
-              role="tab"
-              tabIndex={i === active ? 0 : -1}
-              aria-selected={i === active}
-              aria-controls="tool-panel"
-              className={i === active ? "is-active" : ""}
-              onClick={() => select(i)}
-            >
-              <Icon name={t.icon} size={18} />
-              {t.shortLabel}
-            </button>
-          ))}
-        </div>
-
-        <div
-          className="tool-panel"
-          id="tool-panel"
-          role="tabpanel"
-          aria-labelledby={`tab-${tool.id}`}
-          key={tool.id}
-        >
-          <h3>{tool.title}</h3>
-          <p>{tool.description}</p>
-          <span className="tool-detail">{tool.detail}</span>
+        <div className="showcase-copy" data-reveal>
+          <p className="eyebrow">Made to feel at home on your phone</p>
+          <h2 id="inside-title">Useful, without the busywork.</h2>
+          <p className="showcase-intro">
+            Start with the screen that matches what you need. The rest of the app
+            stays close by.
+          </p>
+          <div
+            className="tabs"
+            role="tablist"
+            aria-label="CreatorKit app screens"
+            style={{ "--tab-index": active } as CSSProperties}
+            onKeyDown={onKeyDown}
+          >
+            {showcaseTools.map((item, index) => (
+              <button
+                key={item.id}
+                ref={(element) => { tabRefs.current[index] = element; }}
+                id={`tab-${item.id}`}
+                type="button"
+                role="tab"
+                tabIndex={index === active ? 0 : -1}
+                aria-selected={index === active}
+                aria-controls="tool-panel"
+                onClick={() => select(index)}
+              >
+                <Icon name={item.icon} size={17} />
+                {item.shortLabel}
+              </button>
+            ))}
+          </div>
+          <div
+            className="tool-panel"
+            id="tool-panel"
+            role="tabpanel"
+            aria-labelledby={`tab-${tool.id}`}
+            key={tool.id}
+          >
+            <h3>{tool.title}</h3>
+            <p>{tool.description}</p>
+            <span>{tool.detail}</span>
+          </div>
         </div>
       </div>
     </section>

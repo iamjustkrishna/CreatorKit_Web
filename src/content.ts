@@ -1,5 +1,3 @@
-// Page copy that is shared between components and the motion layer.
-
 import type { IconName } from "./components/Icons";
 
 export const workflow: {
@@ -12,28 +10,28 @@ export const workflow: {
   {
     icon: "video",
     title: "Extract",
-    text: "Pull high-quality audio from a video.",
-    tag: "SOURCE",
-    readout: "MP3 · M4A · AAC · WAV",
+    text: "Extract audio from a supported video.",
+    tag: "EXTRACT",
+    readout: "MP3 · M4A (AAC)",
   },
   {
     icon: "wave",
     title: "Enhance",
-    text: "Reduce noise and bring the voice forward.",
-    tag: "CLEAN",
-    readout: "Noise down · Voice up",
+    text: "Boost and clarify a voice recording.",
+    tag: "ENHANCE",
+    readout: "Compare before saving",
   },
   {
     icon: "captions",
     title: "Transcribe",
-    text: "Turn English speech into editable text.",
-    tag: "TEXT",
+    text: "Create an English transcript on-device.",
+    tag: "TRANSCRIBE",
     readout: "English · On-device",
   },
   {
     icon: "folder",
     title: "Keep",
-    text: "Play, share, and organize every output.",
+    text: "Play, share, and organize local files.",
     tag: "LIBRARY",
     readout: "One local library",
   },
@@ -54,34 +52,69 @@ export const showcaseTools: ShowcaseTool[] = [
   {
     id: "extract",
     shortLabel: "Extract",
-    title: "Turn video into clean audio.",
+    title: "Audio extraction, without the detour.",
     description:
-      "Choose the format that fits your workflow, from compact M4A to widely compatible MP3 and WAV.",
-    detail: "MP3, M4A, AAC and WAV",
+      "Select a supported video, choose MP3 or M4A (AAC), and save the audio to your device.",
+    detail: "Video formats: MP4, MKV, AVI",
     image: "/assets/screenshot-extractor.png",
-    alt: "CreatorKit Audio Extractor screen with format and processing controls",
+    alt: "CreatorKit Audio Extractor screen with video selection and MP3 format controls",
     icon: "video",
   },
   {
     id: "transcribe",
     shortLabel: "Transcribe",
-    title: "Make spoken ideas editable.",
+    title: "Keep the words, skip the retyping.",
     description:
-      "Select audio or video and turn English speech into a transcript you can read, edit, and reuse.",
-    detail: "On-device Moonshine ASR",
+      "Create an English transcript from supported audio or video, processed on your phone.",
+    detail: "English speech · On-device",
     image: "/assets/screenshot-transcriber.png",
-    alt: "CreatorKit AI Transcriber screen with recent transcripts",
+    alt: "CreatorKit AI Transcriber screen with audio and video file selection",
     icon: "captions",
   },
   {
     id: "organize",
-    shortLabel: "Organize",
-    title: "Keep every output in reach.",
+    shortLabel: "Library",
+    title: "Your finished work, in one place.",
     description:
-      "Browse exports by tool, play finished audio, open transcripts, share files, or move them into your own folders.",
-    detail: "One local media library",
+      "Browse files by tool, play audio, open transcripts, and share or organize your exports.",
+    detail: "Local media library",
     image: "/assets/screenshot-library.png",
-    alt: "CreatorKit Library screen grouping transcripts and enhanced audio",
+    alt: "CreatorKit Library screen grouping files by tool",
     icon: "folder",
+  },
+];
+
+export const articles = [
+  {
+    slug: "video-to-audio-on-android",
+    title: "A straightforward way to get audio out of a video",
+    summary:
+      "A practical guide to choosing a video, picking MP3 or M4A, and keeping the exported file easy to find.",
+    category: "A practical guide",
+    readTime: "4 min read",
+  },
+  {
+    slug: "enhance-a-voice-recording",
+    title: "A better voice recording starts with a good listen",
+    summary:
+      "How to review a recording, try a vocal enhancement, and decide for yourself whether the result is better.",
+    category: "Audio notes",
+    readTime: "4 min read",
+  },
+  {
+    slug: "transcribe-english-audio-offline",
+    title: "Turn an English voice note into text on Android",
+    summary:
+      "A simple on-device transcription workflow, plus a few ways to make a source recording easier to follow.",
+    category: "A practical guide",
+    readTime: "5 min read",
+  },
+  {
+    slug: "the-recording-that-waited",
+    title: "The recording that waited until the train ride home",
+    summary:
+      "A fictional creator story about catching an idea, cleaning up the voice note, and letting a small tool stay small.",
+    category: "A small story",
+    readTime: "3 min read",
   },
 ];

@@ -1,76 +1,50 @@
-import StoreButton, { GITHUB_URL } from "./StoreButton";
-import { Icon } from "./Icons";
+import StoreButton from "./StoreButton";
 
 export default function Hero() {
   return (
-    <section className="hero" id="top" data-chapter="hero">
+    <section className="hero page-width" id="top" aria-labelledby="hero-title">
       <div className="hero-copy">
-        <p className="availability" data-hero="rise">
-          <span className="availability-dot" aria-hidden="true" />
-          Free on Android · No ads · No account
+        <p className="eyebrow hero-eyebrow">
+          <span className="eyebrow-dot" aria-hidden="true" />
+          A focused audio toolkit for Android
         </p>
-
-        <h1 className="hero-title" data-hero-title>
-          <span className="hero-line">
-            Stop watching <span className="ads-word">ads.</span>
-          </span>{" "}
-          <span className="hero-line hero-line--accent">Start creating.</span>
+        <h1 id="hero-title">
+          Make more room
+          <br />
+          for the <em>making.</em>
         </h1>
-
-        <p className="hero-lede" data-hero="rise">
-          Extract audio, clean up vocals, and turn speech into text with one
-          focused toolkit that keeps your media on your phone.
+        <p className="hero-lede">
+          Extract audio, bring vocals forward, and turn English speech into text.
+          CreatorKit keeps the useful tools together and your files on your phone.
         </p>
-
-        <div className="hero-actions" data-hero="rise">
+        <div className="hero-actions">
           <StoreButton />
-          <a className="text-link" href={GITHUB_URL} target="_blank" rel="noreferrer">
-            <Icon name="github" size={21} />
-            Explore the source
+          <a className="quiet-link" href="#features">
+            Explore the tools <span aria-hidden="true">↓</span>
           </a>
         </div>
-
-        <ul className="hero-meta" data-hero="rise" aria-label="Highlights">
-          <li>Android 10+</li>
-          <li>On-device</li>
-          <li>Open source</li>
-        </ul>
+        <p className="hero-note">No ads. No account. No cloud uploads.</p>
       </div>
-
-      {/* The 3D phone docks to this box. The <img> is the no-WebGL fallback. */}
-      <div
-        className="hero-stage"
-        data-anchor="hero-phone"
-        data-hero="stage"
-        role="img"
-        aria-label="CreatorKit Audio Extractor interface on a phone"
-      >
-        <div className="phone-fallback" aria-hidden="true">
+      <div className="hero-visual" data-reveal>
+        <div className="hero-orbit hero-orbit--one" aria-hidden="true" />
+        <div className="hero-orbit hero-orbit--two" aria-hidden="true" />
+        <div className="hero-phone">
           <img
             src="/assets/screenshot-extractor.png"
-            alt=""
+            alt="CreatorKit Audio Extractor showing video selection, MP3 format, and the Studio and Library tabs"
             width="1080"
-            height="2285"
+            height="2400"
             fetchPriority="high"
           />
         </div>
-        <div className="glass-chip glass-chip--a" data-hero="chip" aria-hidden="true">
-          <Icon name="wave" size={16} />
-          Vocal clarity
+        <div className="floating-note floating-note--top">
+          <span className="note-mark" aria-hidden="true">♫</span>
+          <span><b>Video to audio</b><small>MP3 or M4A</small></span>
         </div>
-        <div className="glass-chip glass-chip--b" data-hero="chip" aria-hidden="true">
-          <Icon name="shield" size={16} />
-          Files stay local
+        <div className="floating-note floating-note--bottom">
+          <span className="note-check" aria-hidden="true">✓</span>
+          <span><b>Saved locally</b><small>Ready when you are</small></span>
         </div>
-        <div className="glass-chip glass-chip--c" data-hero="chip" aria-hidden="true">
-          <Icon name="captions" size={16} />
-          Speech to text
-        </div>
-      </div>
-
-      <div className="scroll-cue" aria-hidden="true" data-hero="fade">
-        <span>Scroll</span>
-        <i />
       </div>
     </section>
   );

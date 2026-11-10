@@ -10,10 +10,10 @@ export default function Declaration() {
           <b>01</b>Ad-free
         </li>
         <li>
-          <b>02</b>Open source
+          <b>02</b>On-device
         </li>
         <li>
-          <b>03</b>Made for Android
+          <b>03</b>No account
         </li>
       </ul>
     </section>

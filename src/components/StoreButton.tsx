@@ -1,6 +1,5 @@
 export const PLAY_STORE_URL =
   "https://play.google.com/store/apps/details?id=space.iamjustkrishna.creatorkit";
-export const GITHUB_URL = "https://github.com/iamjustkrishna/CreatorKit";
 export const PRIVACY_URL = "https://iamjustkrishna.github.io/privacy-policies/";
 
 export function PlayStoreMark() {
@@ -30,7 +29,7 @@ export default function StoreButton({ compact = false }: { compact?: boolean }) 
     >
       <PlayStoreMark />
       <span>
-        <small>Get it on</small>
+        <small>Available on</small>
         Google Play
       </span>
     </a>

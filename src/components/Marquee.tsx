@@ -4,7 +4,7 @@ const WORDS = [
   "Transcribe",
   "Keep",
   "Ad-free",
-  "Open source",
+  "No account",
   "On-device",
 ];
 
